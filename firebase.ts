@@ -1,10 +1,11 @@
 // Import the functions you need from the SDKs you need
 
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+
 import { getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getStorage } from "firebase/storage";
+import { getAnalytics, isSupported } from "firebase/analytics";
 
 
 
@@ -23,7 +24,13 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
-const analytics = getAnalytics(app);
+if (typeof window !== "undefined") {
+    isSupported().then((supported) => {
+      if (supported) {
+        const analytics = getAnalytics(app);
+      }
+    });
+  }
 
 export const storage = getStorage(app);
 export const db=getFirestore(app)

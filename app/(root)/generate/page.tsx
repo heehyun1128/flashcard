@@ -76,9 +76,13 @@ export default function Generate() {
       alert("Please enter a name");
       return;
     }
+    if (!user?.id) {
+      alert("User is not authenticated.");
+      return;
+    }
 
     const batch = writeBatch(db);
-    const userDocRef = doc(collection(db, "user"), user?.id || "");
+    const userDocRef = doc(collection(db, "users"), user?.id);
     const docSnap = await getDoc(userDocRef);
 
     if (docSnap.exists()) {
