@@ -1,5 +1,7 @@
+'use client'
 import Image from "next/image";
 import getStripe from "@/utils/get-stripe";
+
 
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import {
@@ -12,8 +14,10 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router=useRouter()
   return (
     <Container maxWidth="lg">
       <Head>
@@ -39,7 +43,7 @@ export default function Home() {
       <Box sx={{ textAlign: "center" }}>
         <Typography variant="h2">Welcome to Flashcard</Typography>
         <Typography variant="h5">xxx</Typography>
-        <Button variant="contained">Get started</Button>
+        <Button onClick={()=>router.push('/generate')} variant="contained">Get started</Button>
       </Box>
       <Box>Feature Section</Box>
       <Box>Pricing</Box>

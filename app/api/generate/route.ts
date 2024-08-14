@@ -15,6 +15,7 @@ The content should be focused, easy to understand, and suitable for efficient st
 8. Tailor the difficulty level of the flashcards to the user's specified preferences.
 9. If given a body of text, extract the most important and relevant information for the flashcards.
 10. Aim to create a balanced set of flashcards that covers the topic comprehensively.
+11. Only generate 15 flashcards
 
 Remember, the goal is to facilitate effective learning and retention of information through these flashcards.
 
@@ -61,7 +62,7 @@ export async function POST(req: Request) {
 
    const flashcards=JSON.parse(content)
     // Return the response
-    return NextResponse.json(flashcards.flashcard);
+    return NextResponse.json(flashcards.flashcards);
   } catch (err) {
     console.error("Error processing request:", err);
 
