@@ -32,7 +32,7 @@ const Hero: React.FC = () => {
       className="mt-12 flex justify-center space-x-4"
     >
       <SignedIn>
-        <Link href="/create-flashcards" passHref>
+        <Link href="/generate" passHref>
           <motion.button
             className="bg-gradient-to-r from-deep-orange to-light-orange text-charcoal-black font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl"
             {...buttonHoverProps}
