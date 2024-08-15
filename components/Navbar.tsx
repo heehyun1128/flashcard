@@ -3,14 +3,9 @@ import { motion } from "framer-motion";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
+import { headerAnimationProps } from "@/utils/motion";
 
 const Navbar: React.FC = () => {
-  const headerAnimationProps = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    transition: { duration: 0.5 },
-  };
-
   return (
     <header className="container mx-auto px-6 py-8 flex items-center justify-between relative z-10">
       <motion.div

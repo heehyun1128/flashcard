@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { FaGithub } from "react-icons/fa";
 import Head from "next/head";
+import { headerAnimationProps, mainAnimationProps, buttonHoverProps, buttonAnimationProps } from "@/utils/motion";
 
 const GlassmorphicBackground = React.memo(() => (
   <div className="fixed inset-0 z-0">
@@ -17,51 +18,6 @@ const GlassmorphicBackground = React.memo(() => (
 ));
 
 export default function Home() {
-  const headerAnimationProps = useMemo(
-    () => ({
-      initial: { opacity: 0 },
-      animate: { opacity: 1 },
-      transition: { duration: 0.5 },
-    }),
-    []
-  );
-
-  const mainAnimationProps = useMemo(
-    () => ({
-      initial: { opacity: 0, y: -20 },
-      animate: { opacity: 1, y: 0 },
-      transition: { duration: 0.5 },
-    }),
-    []
-  );
-
-  const buttonHoverProps = useMemo(
-    () => ({
-      whileHover: {
-        scale: 1.05,
-        backgroundImage: "linear-gradient(to right, #2F855A, #38A169)",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      },
-      transition: {
-        duration: 0.2,
-        ease: "easeInOut",
-      },
-    }),
-    []
-  );
-
-  const buttonAnimationProps = useMemo(
-    () => ({
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 },
-      transition: {
-        duration: 0.5,
-        ease: "easeInOut",
-      },
-    }),
-    []
-  );
-
   return (
     <div className="bg-[#f5f5f0] text-[#1e90ff] font-sans min-h-screen overflow-hidden relative">
       <Head>
