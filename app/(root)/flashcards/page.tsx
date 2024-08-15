@@ -42,11 +42,11 @@ export default function Flashcards() {
   }, [user]);
 
   if (!isLoaded || !isSignedIn) {
-    return null; // Optionally render a loading or sign-in prompt here
+    return null; 
   }
 
-  const handleCardClick = (id: number) => {
-    router.push(`/flashcard?id=${id}`);
+  const handleCardClick = (name: string) => {
+    router.push(`/flashcard?id=${name}`);
   };
 
   return (
@@ -55,7 +55,7 @@ export default function Flashcards() {
         {flashcards.map((flashcard, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card>
-              <CardActionArea onClick={() => handleCardClick(index)}>
+              <CardActionArea onClick={() => handleCardClick(flashcard?.name)}>
                 <CardContent>
                   <Typography variant="h6">{flashcard?.name}</Typography>
                 </CardContent>
