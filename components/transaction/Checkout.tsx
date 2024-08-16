@@ -11,12 +11,12 @@ import getStripe from "@/utils/get-stripe";
 const Checkout = ({
   plan,
   payAmount,
-  credits,
+
   userId,
 }: {
   plan: string;
   payAmount: number;
-  credits: number;
+
   userId: string;
 }) => {
   const { toast } = useToast();
@@ -39,50 +39,54 @@ const Checkout = ({
     if (query.get("canceled")) {
       toast({
         title: "Order is canceled!",
-        description: "If you need assistance or have questions, please contact support.",
+        description:
+          "If you need assistance or have questions, please contact support.",
         duration: 5000,
         className: "error-toast",
       });
     }
   }, [toast]);
 
-  const checkout = useCallback(async (event) => {
-    event.preventDefault(); // Prevent form submission
+  const checkout = useCallback(
+    async (event) => {
+      event.preventDefault(); // Prevent form submission
 
-    const checkoutSession = await fetch('/api/transaction', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // Correct Content-Type
-        'Origin': 'https://localhost:3000', // Correct Origin
-      },
-      body: JSON.stringify({
-        plan,
-        payAmount,
-        credits,
-        userId,
-      }),
-    });
+      const checkoutSession = await fetch("/api/transaction", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Correct Content-Type
+          Origin: "https://localhost:3000", // Correct Origin
+        },
+        body: JSON.stringify({
+          plan,
+          payAmount,
 
-    if (checkoutSession.ok) {
-      const checkoutJson = await checkoutSession.json();
-      const stripe = await getStripe();
+          userId,
+        }),
+      });
 
-      if (stripe) {
-        const { error } = await stripe.redirectToCheckout({
-          sessionId: checkoutJson.id,
-        });
+      if (checkoutSession.ok) {
+        const checkoutJson = await checkoutSession.json();
+        const stripe = await getStripe();
 
-        if (error) {
-          console.warn(error.message);
+        if (stripe) {
+          const { error } = await stripe.redirectToCheckout({
+            sessionId: checkoutJson.id,
+          });
+
+          if (error) {
+            console.warn(error.message);
+          }
+        } else {
+          console.error("Stripe not initialized");
         }
       } else {
-        console.error("Stripe not initialized");
+        const errorText = await checkoutSession.text();
+        console.error("Fetch error:", errorText);
       }
-    } else {
-      const errorText = await checkoutSession.text();
-      console.error('Fetch error:', errorText);
-    }
-  }, [plan, payAmount, credits, userId, toast]);
+    },
+    [plan, payAmount, userId, toast]
+  );
 
   return (
     <form onSubmit={checkout}>
@@ -90,10 +94,9 @@ const Checkout = ({
         <Button
           type="submit"
           role="button"
-          variant="contained"
-          color="primary"
-          className="w-full rounded-full"
-        >
+       
+          className="bg-deep-orange text-charcoal-black font-light py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 backdrop-filter backdrop-blur-3xl w-full"
+    >
           Upgrade Plan
         </Button>
       </section>
