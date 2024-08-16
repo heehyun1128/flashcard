@@ -32,7 +32,7 @@ const Features: React.FC = () => {
   const y3 = useTransform(scrollYProgress, [0.66, 1], [50, 0]);
 
   return (
-    <section ref={ref} className="relative space-y-4">
+    <section ref={ref} className="relative space-y-8">
       {featureData.map((feature, index) => (
         <motion.div
           key={index}
@@ -45,6 +45,7 @@ const Features: React.FC = () => {
           <FeatureCard
             title={feature.title}
             videoSrc={feature.videoSrc}
+            videoOnRight={feature.videoOnRight}
           />
         </motion.div>
       ))}

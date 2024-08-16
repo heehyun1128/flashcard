@@ -2,18 +2,20 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+// import { useAuth } from "@clerk/nextjs";
 import { mainAnimationProps } from "@/utils/motion";
 import { Button } from "@/components/ui/button";
 
 const Hero: React.FC = () => {
+  // const { isSignedIn } = useAuth();
+
   return (
     <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-16 text-center relative z-10">
       <motion.h1
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="text-[54px] sm:text-[64px] md:text-[74px] lg:text-[96px] font-extrabold leading-[1.1] mb-4 text-charcoal-black text-center tracking-tighter"
+        className="text-[42px] sm:text-[64px] md:text-[74px] lg:text-[96px] font-extrabold leading-[1.1] mb-4 text-charcoal-black text-center tracking-tighter"
       >
         AI Superpowers for
         <br />
@@ -27,10 +29,11 @@ const Hero: React.FC = () => {
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.8, duration: 0.5 }}
-        className="text-charcoal-black text-base sm:text-lg md:text-xl mt-4 sm:mt-6 text-center tracking-tight"
+        className="text-charcoal-black text-[13px] sm:text-lg md:text-xl mt-4 sm:mt-6 text-center tracking-tight px-4 sm:px-0"
       >
         Supercharge your learning with AI-powered flashcards. Effortless,
-        <br />
+        {' '}
+        <span className="sm:hidden"><br /></span>
         lightning-fast, and presented in a sleek, intuitive interface.
       </motion.p>
 
@@ -39,28 +42,21 @@ const Hero: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.5 }}
-        className="mt-8 sm:mt-12 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4"
+        className="mt-12 flex justify-center space-x-4"
       >
-        {/* <SignedIn>
-          <Link href="/create-flashcards" passHref>
-            <Button className="w-full sm:w-auto">
-              Create Flashcards
+        {/* {isSignedIn ? (
+          <Link href="/generate" passHref>
+            <Button variant="secondary" className="w-full sm:w-auto">
+              Generate Flashcards
             </Button>
           </Link>
-        </SignedIn> */}
-        {/* <SignedOut> */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2, duration: 0.5 }}
-          >
-            <Link href="/" passHref>
-              <Button variant="secondary" className="w-full sm:w-auto">
-                Join the waitlist
-              </Button>
-            </Link>
-          </motion.div>
-        {/* </SignedOut> */}
+        ) : ( */}
+          <Link href="/" passHref>
+            <Button variant="secondary" className="w-full sm:w-auto">
+              Join the waitlist
+            </Button>
+          </Link>
+        {/* )} */}
       </motion.div>
 
       {/* Hero Image */}

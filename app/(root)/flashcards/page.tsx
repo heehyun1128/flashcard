@@ -4,14 +4,6 @@ import { useEffect, useState } from 'react';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { useRouter } from 'next/navigation';
-import {
-  Container,
-  Grid,
-  Card,
-  CardActionArea,
-  CardContent,
-  Typography,
-} from '@mui/material';
 
 interface Flashcard {
   name: string;
@@ -42,28 +34,27 @@ export default function Flashcards() {
   }, [user]);
 
   if (!isLoaded || !isSignedIn) {
-    return null; // Optionally render a loading or sign-in prompt here
+    return null; 
   }
 
-  const handleCardClick = (id: number) => {
-    router.push(`/flashcard?id=${id}`);
+  const handleCardClick = (name: string) => {
+    router.push(`/flashcard?id=${name}`);
   };
 
   return (
-    <Container maxWidth="lg">
-      <Grid container spacing={3} sx={{ mt: 4 }}>
+    <div className="container mx-auto px-4 py-16 mt-44 md:py-24 lg:py-32">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {flashcards.map((flashcard, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card>
-              <CardActionArea onClick={() => handleCardClick(index)}>
-                <CardContent>
-                  <Typography variant="h6">{flashcard?.name}</Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
+          <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <button
+              onClick={() => handleCardClick(flashcard?.name)}
+              className="w-full h-full p-6 text-left transition duration-300 ease-in-out hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-deep-orange focus:ring-opacity-50"
+            >
+              <h2 className="text-xl font-semibold text-charcoal-black">{flashcard?.name}</h2>
+            </button>
+          </div>
         ))}
-      </Grid>
-    </Container>
+      </div>
+    </div>
   );
 }

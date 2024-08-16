@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
       animate="visible"
       variants={containerVariants}
     >
-      <div className="container mx-auto px-4 py-16 mt-44 md:py-24 lg:py-32">
+      <div className="container mx-auto px-4 py-16  md:py-24 lg:py-32">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 lg:gap-24">
           <motion.div className="text-center md:text-left" variants={itemVariants}>
             <motion.h1 

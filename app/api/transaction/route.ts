@@ -8,6 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 const formatAmount = (amount: number) => Math.round(amount * 100);
 
 export async function POST(req:NextRequest) {
+  const {plan, payAmount}=await req.json()
   try {
     const params = {
       mode: 'subscription', 
@@ -16,9 +17,9 @@ export async function POST(req:NextRequest) {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: 'Pro Subscription',
+            name: `${plan} Subscription`,
           },
-          unit_amount: formatAmount(10), 
+          unit_amount: formatAmount(payAmount), 
           recurring: {
             interval: 'month',
             interval_count:1
@@ -26,8 +27,8 @@ export async function POST(req:NextRequest) {
         },
         quantity: 1,
       }],
-      success_url: `${req.headers.get('origin')}/result?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get('origin')}/result?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `http://localhost:3000`,
+      cancel_url: `http://localhost:3000`,
     };
 
     const checkoutSession = await stripe.checkout.sessions.create(params);

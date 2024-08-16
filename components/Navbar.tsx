@@ -7,10 +7,10 @@ import { headerAnimationProps } from "@/utils/motion";
 
 const Navbar: React.FC = () => {
   return (
-    <header className="container mx-auto px-6 py-8 flex items-center justify-between relative z-10">
+    <header className="container mx-auto px-6 py-8 flex items-center justify-center relative z-10">
       <motion.div
         {...headerAnimationProps}
-        className="text-charcoal-black flex items-center justify-between w-full"
+        className="text-charcoal-black flex items-center justify-center w-full"
       >
         <Link href="/">
           <motion.img 
@@ -18,9 +18,8 @@ const Navbar: React.FC = () => {
             alt="Cardia Logo" 
             className="h-8" 
             whileHover={{ scale: 1.05 }}
-            initial={{ x: -100, opacity: 0 }}
+            initial={{ opacity: 0 }}
             animate={{ 
-              x: 0, 
               opacity: 1,
               transition: {
                 type: "spring",
@@ -31,15 +30,6 @@ const Navbar: React.FC = () => {
             transition={{ type: "spring", stiffness: 300 }}
           />
         </Link>
-
-        {/* <SignedIn>
-          <UserButton/>
-        </SignedIn> */}
-        {/* <SignedOut> */}
-          {/* <Link href="/">
-            <Button variant="ghost">Join waitlist</Button>
-          </Link> */}
-        {/* </SignedOut> */}
       </motion.div>
     </header>
   );
