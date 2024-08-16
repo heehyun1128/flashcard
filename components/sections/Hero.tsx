@@ -64,7 +64,7 @@ const Hero: React.FC = () => {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.6, duration: 0.5 }}
-        className="mt-12 sm:mt-20 p-2 bg-deep-orange bg-opacity-10 rounded-3xl shadow-6xl relative overflow-hidden backdrop-filter backdrop-blur-3xl"
+        className="mt-12 sm:mt-20 p-2 bg-deep-orange bg-opacity-60 rounded-3xl shadow-6xl relative overflow-hidden backdrop-filter backdrop-blur-3xl"
         style={{
           boxShadow: "0 0 50px 2px rgba(255, 198, 113, 0.2)",
         }}
