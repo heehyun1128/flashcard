@@ -2,8 +2,7 @@
 import React from "react";
 import Head from "next/head";
 import Hero from "@/components/sections/Hero";
-
-
+import Features from "@/components/sections/Features";
 
 const Home: React.FC = () => {
   return (
@@ -13,7 +12,7 @@ const Home: React.FC = () => {
         <meta name="description" content="Enhance Your Learning with AI-Generated Flashcards" />
       </Head>
       <Hero />
-      {/* <Features /> */}
+      <Features />
     </div>
   );
 };

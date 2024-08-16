@@ -2,17 +2,26 @@ import React from 'react';
 
 const TestPage: React.FC = () => {
   return (
-    <div className="border border-purple-600 h-screen flex">
-      <div className="bg-[#f5f2ff] w-1/2 flex flex-col justify-center items-center">
-        <div className="text-gray-800 text-2xl">
-          Tasks, notes <br /> & everything <br /> in between.
+    <div className="h-screen flex">
+      <div className="w-1/2 flex flex-col justify-center items-center">
+        <div className="text-charcoal-black text-[54px] sm:text-[64px] md:text-[74px] lg:text-[96px] font-semibold leading-[1.1] tracking-tighter">
+          <span className="text-deep-orange">Tasks, notes</span><br />
+          & everything<br />
+          in between.
         </div>
       </div>
-      <div className="bg-purple-600 w-1/2 flex items-center justify-center">
-        <div className="bg-yellow-400 rounded-[70px] w-[90%] h-[90%] flex items-center justify-center">
-          <div className="text-black text-2xl">
-            Video Container
-          </div>
+      <div className="w-1/2 flex items-center justify-center">
+        <div className="rounded-[50px] w-[70%] h-[70%] flex items-center justify-center relative overflow-hidden">
+          <video
+            src="/video/main.mp4"
+            width={900}
+            height={450}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="rounded-[40px] w-full h-full object-cover"
+          />
         </div>
       </div>
     </div>
