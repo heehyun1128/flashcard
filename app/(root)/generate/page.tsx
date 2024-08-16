@@ -40,6 +40,8 @@ export default function Generate() {
   const [text, setText] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [tilted, setTilted] = useState<{ [key: string]: boolean }>({});
 
   const handleSubmit = async () => {
     try {
@@ -58,11 +60,13 @@ export default function Generate() {
   };
 
   const handleCardClick = (id: number) => {
-    setFlipped((prev) => ({
+    setTilted((prev) => ({
       ...prev,
       [id]: !prev[id],
     }));
   };
+
+  
 
   const handleOpen = () => {
     setOpen(true);
@@ -147,94 +151,90 @@ export default function Generate() {
         </Box>
       </Box>
 
-      {flashcards?.length && (
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h5">Flashcards Preview</Typography>
-          <Grid container spacing={3}>
-            {flashcards.map((flashcard, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card>
-                  <CardActionArea onClick={() => handleCardClick(index)}>
-                    <CardContent>
-                      <Box
-                        sx={{
-                          position: "relative",
-                          width: "100%",
-                          height: "200px",
-                          overflow: "hidden",
-                          borderRadius: "1rem",
-                          boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
-                          perspective: "1000px", // Adding perspective for the 3D effect
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            position: "relative",
-                            width: "100%",
-                            height: "100%",
-                            transition: "transform 0.6s",
-                            transformStyle: "preserve-3d",
-                            transform: flipped[index]
-                              ? "rotateY(180deg)"
-                              : "rotateY(0deg)",
-                          }}
-                        >
-                          {/* Front side */}
-                          <Box
-                            sx={{
-                              position: "absolute",
-                              width: "100%",
-                              height: "100%",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              backgroundColor: "#FFC671",
-                              borderRadius: "1rem",
-                              backfaceVisibility: "hidden",
-                              padding: "20px",
-                            }}
-                          >
-                            <Typography style={{ textAlign: "center" }}>
-                              {flashcard.front}
-                            </Typography>
-                          </Box>
-
-                          {/* Back side */}
-                          <Box
-                            sx={{
-                              position: "absolute",
-                              width: "100%",
-                              height: "100%",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              backgroundColor: "#8B98FF", // Background color for back
-                              borderRadius: "1rem",
-                              backfaceVisibility: "hidden",
-                              transform: "rotateY(180deg)",
-                              padding: "20px",
-                              zIndex: flipped[index] ? 1 : 0,
-                            }}
-                          >
-                            <Typography style={{ textAlign: "center" }}>
-                              {flashcard.back}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </Box>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-            <Button variant="contained" color="secondary" onClick={handleOpen}>
-              Save
-            </Button>
+      <Box sx={{width: "100%", display:"flex", justifyContent:"center"}}>
+      {flashcards?.map((flashcard, index) => (
+          <Box
+            key={index}
+            sx={{
+              position: "absolute",
+              width: "300px",
+              height: "400px",
+              zIndex: currentIndex === index ? 1 : 0, 
+            }}
+            onClick={() => handleCardClick(index)}
+          >
+            <Card
+              sx={{
+                position: "absolute",
+                height: "100%",
+                width: "100%",
+                borderRadius: "1rem",
+                // boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
+                transform: tilted[index]
+                  ? "translateZ(20px)"
+                  : " translateZ(0px)",
+                transformOrigin: "center bottom",
+                transition: "transform 0.6s, z-index 0s",
+                zIndex: tilted[index] ? 2 : 1, 
+              }}
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "20px",
+                  backgroundColor: "#FFC671", 
+                  color: "gray", 
+                }}
+              >
+                <Typography>
+                  {flashcard.back}
+                </Typography>
+              </Box>
+            </Card>
+            <Card
+              sx={{
+                position: "absolute",
+                height: "100%",
+                width: "100%",
+                borderRadius: "1rem",
+                // boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
+                transform: tilted[index]
+                  ? "rotateZ(-20deg) translateZ(0px)"
+                  : "rotateZ(0deg) translateZ(20px)",
+                transformOrigin: "center bottom",
+                transition: "transform 0.6s, z-index 0s",
+                zIndex: tilted[index] ? 1 : 2, // Purple card should be behind initially
+              }}
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "20px",
+                  backgroundColor: "#8B98FF", // Purple card
+                  color: "white", // Text color
+                }}
+              >
+                <Typography>
+                  {flashcard.front}
+                </Typography>
+              </Box>
+            </Card>
           </Box>
-        </Box>
-      )}
+        ))}
+      </Box>
+          {flashcards?.length&&  <Button  variant="contained" color="secondary" onClick={handleOpen}>
+              Save
+            </Button>}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Save Flashcards</DialogTitle>
         <DialogContent>
