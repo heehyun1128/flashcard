@@ -10,7 +10,7 @@ const Navbar: React.FC = () => {
     <header className="container mx-auto px-6 py-8 flex items-center justify-between relative z-10">
       <motion.div
         {...headerAnimationProps}
-        className="text-charcoal-black"
+        className="text-charcoal-black flex items-center justify-between w-full"
       >
         <Link href="/">
           <motion.img 
@@ -18,19 +18,29 @@ const Navbar: React.FC = () => {
             alt="Cardia Logo" 
             className="h-8" 
             whileHover={{ scale: 1.05 }}
+            initial={{ x: -100, opacity: 0 }}
+            animate={{ 
+              x: 0, 
+              opacity: 1,
+              transition: {
+                type: "spring",
+                stiffness: 100,
+                damping: 15
+              }
+            }}
             transition={{ type: "spring", stiffness: 300 }}
           />
         </Link>
-      </motion.div>
 
-      <SignedIn>
-        <UserButton/>
-      </SignedIn>
-      <SignedOut>
-        <Link href="/sign-in">
-          <Button>Log in / Sign up</Button>
-        </Link>
-      </SignedOut>
+        {/* <SignedIn>
+          <UserButton/>
+        </SignedIn> */}
+        {/* <SignedOut> */}
+          {/* <Link href="/">
+            <Button variant="ghost">Join waitlist</Button>
+          </Link> */}
+        {/* </SignedOut> */}
+      </motion.div>
     </header>
   );
 };

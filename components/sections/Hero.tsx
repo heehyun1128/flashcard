@@ -10,7 +10,9 @@ const Hero: React.FC = () => {
   return (
     <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-16 text-center relative z-10">
       <motion.h1
-        {...mainAnimationProps}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
         className="text-[54px] sm:text-[64px] md:text-[74px] lg:text-[96px] font-extrabold leading-[1.1] mb-4 text-charcoal-black text-center tracking-tighter"
       >
         AI Superpowers for
@@ -22,9 +24,9 @@ const Hero: React.FC = () => {
         </span>
       </motion.h1>
       <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
         className="text-charcoal-black text-base sm:text-lg md:text-xl mt-4 sm:mt-6 text-center tracking-tight"
       >
         Supercharge your learning with AI-powered flashcards. Effortless,
@@ -39,20 +41,26 @@ const Hero: React.FC = () => {
         transition={{ delay: 0.4, duration: 0.5 }}
         className="mt-8 sm:mt-12 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4"
       >
-        <SignedIn>
+        {/* <SignedIn>
           <Link href="/create-flashcards" passHref>
             <Button className="w-full sm:w-auto">
               Create Flashcards
             </Button>
           </Link>
-        </SignedIn>
-        <SignedOut>
-          <Link href="/sign-in" passHref>
-            <Button variant="secondary" className="w-full sm:w-auto">
-              Sign in to Start Learning
-            </Button>
-          </Link>
-        </SignedOut>
+        </SignedIn> */}
+        {/* <SignedOut> */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 0.5 }}
+          >
+            <Link href="/" passHref>
+              <Button variant="secondary" className="w-full sm:w-auto">
+                Join the waitlist
+              </Button>
+            </Link>
+          </motion.div>
+        {/* </SignedOut> */}
       </motion.div>
 
       {/* Hero Image */}

@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 lg:gap-24">
           <motion.div className="text-center md:text-left" variants={itemVariants}>
             <motion.h1 
-              className="text-[54px] sm:text-[64px] md:text-[74px] lg:text-[118px] font-semibold leading-[0.9] mb-4 text-charcoal-black tracking-[-0.05em]"
+              className="text-[54px] sm:text-[64px] md:text-[74px] lg:text-[100px] font-semibold leading-[0.9] mb-4 text-charcoal-black tracking-[-0.05em]"
               variants={itemVariants}
             >
               Stay tuned for
