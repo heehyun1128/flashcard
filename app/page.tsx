@@ -9,14 +9,9 @@ import { useRouter } from "next/navigation";
 import Checkout from "@/components/transaction/Checkout";
 import Credits from "@/components/transaction/Credits";
 import Hero from "@/components/sections/Hero";
+import FlashcardDemo from "@/components/demo/FlashcardDemo";
 
-const GlassmorphicBackground = React.memo(function GlassmorphicBackground() {
-  return (
-    <div className="fixed inset-0 z-0">
-      <div className="absolute inset-0 bg-orange-white backdrop-filter backdrop-blur-2xl" />
-    </div>
-  );
-});
+
 
 
 
@@ -35,11 +30,13 @@ export default function Home() {
 
       <Hero />
 
-      <div className="text-charcoal-black relative">Feature Section</div>
+      <div className="relative z-50 ">
+        <FlashcardDemo />
+      </div>
       <div className="z-50 relative">
         <Credits />
       </div>
-      <GlassmorphicBackground />
+    
     </div>
   );
 }

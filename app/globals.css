@@ -2,3 +2,6 @@
 @tailwind components;
 @tailwind utilities;
   
+.put-top{
+    z-index: 99999!important;
+}

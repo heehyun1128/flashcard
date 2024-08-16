@@ -147,57 +147,77 @@ export default function Generate() {
         <Box sx={{ mt: 4 }}>
           <Typography variant="h5">Flashcards Preview</Typography>
           <Grid container spacing={3}>
-            {flashcards.map((flashcard, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card>
-                  <CardActionArea onClick={() => handleCardClick(index)}>
-                    <CardContent>
-                      <Box
-                        sx={{
-                          perspective: "1000px",
-                          "& > div": {
-                            transition: "transform 0.6s",
-                            transformStyle: "preserve-3d",
-                            position: "relative",
-                            width: "100%",
-                            height: "200px",
-                            boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
-                            transform: flipped[index]
-                              ? "rotateY(180deg)"
-                              : "rotateY(0deg)",
-                          },
-                          "& > div > div": {
-                            position: "absolute",
-                            width: "100%",
-                            height: "200px",
-                            backfaceVisibility: "hidden",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            padding: 2,
-                            boxSizing: "border-box",
-                          },
-                          "& > div > div:nth-of-type(2)": {
-                            transform: "rotateY(180deg)",
-                          },
-                        }}
-                      >
-                        <div>
-                          <div>
-                           
-                            <Typography>{flashcard.front}</Typography>
-                          </div>
-                          <div>
-                         
-                            <Typography>{flashcard.back}</Typography>
-                          </div>
-                        </div>
-                      </Box>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-            ))}
+          {flashcards.map((flashcard, index) => (
+  <Grid item xs={12} sm={6} md={4} key={index}>
+    <Card>
+      <CardActionArea onClick={() => handleCardClick(index)}>
+        <CardContent>
+          <Box
+            sx={{
+              position: "relative",
+              width: "100%",
+              height: "200px",
+              overflow: "hidden",
+              borderRadius: '1rem',
+              boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
+              perspective: "1000px", // Adding perspective for the 3D effect
+            }}
+          >
+            <Box
+              sx={{
+                position: "relative",
+                width: "100%",
+                height: "100%",
+                transition: "transform 0.6s",
+                transformStyle: "preserve-3d",
+                transform: flipped[index] ? "rotateY(180deg)" : "rotateY(0deg)",
+              }}
+            >
+              {/* Front side */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#f7e3ab", // Background color for front
+                  borderRadius: '1rem',
+                  backfaceVisibility: "hidden",
+                  padding: "20px",
+                }}
+              >
+                <Typography style={{textAlign:"center"}}>{flashcard.front}</Typography>
+              </Box>
+              
+              {/* Back side */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#cdcae8", // Background color for back
+                  borderRadius: '1rem',
+                  backfaceVisibility: "hidden",
+                  transform: "rotateY(180deg)",
+                  padding: "20px",
+                  zIndex: flipped[index] ? 1 : 0,
+                }}
+              >
+                <Typography style={{textAlign:"center"}}>{flashcard.back}</Typography>
+              </Box>
+            </Box>
+          </Box>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+  </Grid>
+))}
+
           </Grid>
           <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
             <Button variant="contained" color="secondary" onClick={handleOpen}>

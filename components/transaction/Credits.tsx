@@ -156,11 +156,12 @@ const Credits = () => {
 
             {plan.price==0 ? (
               
-                <Button
-                className="text-deep-orange bg-charcoal-black font-light py-3 px-8 rounded-[0.50rem] text-md transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 backdrop-filter backdrop-blur-3xl w-full"
-                >
-                  <a href="/">Get Started For Free</a>
-                </Button>
+              <button
+              className="text-deep-orange bg-charcoal-black font-light py-3 px-8 rounded-md text-md transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 backdrop-filter backdrop-blur-3xl w-full"
+            >
+              <a href="/generate">Get Started For Free</a>
+            </button>
+            
               ) : (
                 <SignedIn>
                   <Checkout
