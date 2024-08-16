@@ -94,9 +94,8 @@ const Checkout = ({
         <Button
           type="submit"
           role="button"
-       
-          className="bg-deep-orange text-charcoal-black font-light py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 backdrop-filter backdrop-blur-3xl w-full"
-    >
+          className="bg-yellow-500 text-black font-light py-3 px-8 rounded-[0.50rem] text-md transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 backdrop-filter backdrop-blur-3xl w-full uppercase"
+        >
           Upgrade Plan
         </Button>
       </section>

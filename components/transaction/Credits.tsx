@@ -2,6 +2,7 @@
 import { SignedIn, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import Checkout from "./Checkout";
+import { Button } from "@mui/material";
 
 export const plans = [
   {
@@ -154,11 +155,12 @@ const Credits = () => {
             </ul>
 
             {plan.price==0 ? (
-                <button
-                className="text-deep-orange bg-charcoal-black font-light py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 backdrop-filter backdrop-blur-3xl w-full"
+              
+                <Button
+                className="text-deep-orange bg-charcoal-black font-light py-3 px-8 rounded-[0.50rem] text-md transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 backdrop-filter backdrop-blur-3xl w-full"
                 >
                   <a href="/">Get Started For Free</a>
-                </button>
+                </Button>
               ) : (
                 <SignedIn>
                   <Checkout
