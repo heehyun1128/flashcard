@@ -51,8 +51,17 @@ const Hero: React.FC = () => {
             </Button>
           </Link>
         ) : ( */}
-          <Link href="/" passHref>
-            <Button variant="secondary" className="w-full sm:w-auto">
+          <Link href="#footer" passHref>
+            <Button 
+              variant="secondary" 
+              className="w-full sm:w-auto"
+              onClick={(e) => {
+                e.preventDefault();
+                document.querySelector('#footer')?.scrollIntoView({
+                  behavior: 'smooth'
+                });
+              }}
+            >
               Join the waitlist
             </Button>
           </Link>
