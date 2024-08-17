@@ -33,9 +33,9 @@ export default function Home() {
       <div className="relative z-50 ">
         <FlashcardDemo />
       </div>
-      <div className="z-50 relative">
+      {/* <div className="z-50 relative">
         <Credits />
-      </div>
+      </div> */}
     
     </div>
   );

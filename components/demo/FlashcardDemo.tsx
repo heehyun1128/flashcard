@@ -5,8 +5,6 @@ import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useSearchParams } from "next/navigation";
 import { Box, Card, Container, Typography, Button } from "@mui/material";
-import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
-import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 interface FlashcardDemo {
   id: string;
   front: string;
