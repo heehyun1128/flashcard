@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { addToWaitlist } from "@/utils/waitlistOperations";
 
 const Footer: React.FC = () => {
   const containerVariants = {
@@ -39,15 +40,8 @@ const Footer: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/waitlist', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email }),
-      });
-
-      if (response.ok) {
+      const success = await addToWaitlist(name, email);
+      if (success) {
         toast({
           title: "Success!",
           description: "You've been added to the waitlist. Check your email for confirmation.",
@@ -66,7 +60,6 @@ const Footer: React.FC = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <motion.footer
       className="bg-orange-white font-sans"
