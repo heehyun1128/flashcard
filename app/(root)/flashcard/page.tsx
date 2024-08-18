@@ -71,15 +71,7 @@ export default function Flashcard() {
     router.push('/flashcards');
   };
 
-  const handleNextCard = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % flashcards.length);
-  };
 
-  const handlePreviousCard = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? flashcards.length - 1 : prevIndex - 1
-    );
-  };
 
   if (!isLoaded || !isSignedIn || isLoading) {
     return <LoadingScreen />;

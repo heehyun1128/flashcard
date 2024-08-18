@@ -25,24 +25,13 @@ export default function Generate() {
   const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
 
-  useEffect(() => {
-    if (isLoaded) {
-      if (!isSignedIn) {
-        router.push('/');
-      }
-    }
-  }, [isLoaded, isSignedIn, router]);
-
-  if (!isLoaded || !isSignedIn) {
-    return null;
-  }
-
   const [flashcards, setFlashcards] = useState<Flashcard[] | null>(null);
   const [flipped, setFlipped] = useState<FlippedState>({});
   const [text, setText] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
-  const [hasExistingFlashcards, setHasExistingFlashcards] = useState<boolean>(false);
+  const [hasExistingFlashcards, setHasExistingFlashcards] =
+    useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRegenerating, setIsRegenerating] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +50,17 @@ export default function Generate() {
 
     checkExistingFlashcards();
   }, [user]);
+  useEffect(() => {
+    if (isLoaded) {
+      if (!isSignedIn) {
+        router.push("/");
+      }
+    }
+  }, [isLoaded, isSignedIn, router]);
 
+  if (!isLoaded || !isSignedIn) {
+    return null;
+  }
   const handleSubmit = async () => {
     if (!text.trim()) {
       setError("Please enter some text before generating flashcards.");
@@ -81,7 +80,9 @@ export default function Generate() {
       setFlashcards(data);
     } catch (error) {
       console.error("Error:", error);
-      setError("An error occurred while generating flashcards. Please try again.");
+      setError(
+        "An error occurred while generating flashcards. Please try again."
+      );
     } finally {
       setIsLoading(false);
       setIsRegenerating(false);
@@ -145,15 +146,20 @@ export default function Generate() {
     "Summarize the main events of World War II",
     "List the fundamental principles of economics",
     "Describe the structure of a human cell",
-    "Outline the plot of Shakespeare's Hamlet"
+    "Outline the plot of Shakespeare's Hamlet",
   ];
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col items-center justify-center mb-8">
-        <h1 className="text-4xl font-semibold mb-6 text-charcoal-black">Generate Flashcards</h1>
+        <h1 className="text-4xl font-semibold mb-6 text-charcoal-black">
+          Generate Flashcards
+        </h1>
         {hasExistingFlashcards && (
-          <Link href="/flashcards" className="mb-4 text-deep-orange hover:text-charcoal-black transition duration-300">
+          <Link
+            href="/flashcards"
+            className="mb-4 text-deep-orange hover:text-charcoal-black transition duration-300"
+          >
             View Existing Flashcards
           </Link>
         )}
@@ -164,10 +170,10 @@ export default function Generate() {
               onChange={(e) => setText(e.target.value)}
               placeholder="Enter your learning material or choose a prompt suggestion below"
               className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-orange resize-none transition-all duration-300 min-h-[150px] text-charcoal-black"
-              style={{ height: text ? 'auto' : '150px' }}
+              style={{ height: text ? "auto" : "150px" }}
               onInput={(e) => {
                 const target = e.target as HTMLTextAreaElement;
-                target.style.height = 'auto';
+                target.style.height = "auto";
                 target.style.height = `${Math.max(target.scrollHeight, 150)}px`;
               }}
             />
@@ -184,11 +190,11 @@ export default function Generate() {
             </button>
           </div>
         </div>
-        {error && (
-          <p className="mt-4 text-red-500">{error}</p>
-        )}
+        {error && <p className="mt-4 text-red-500">{error}</p>}
         <div className="mt-6 w-full max-w-2xl">
-          <h3 className="text-lg font-semibold mb-2 text-charcoal-black">Prompt Suggestions:</h3>
+          <h3 className="text-lg font-semibold mb-2 text-charcoal-black">
+            Prompt Suggestions:
+          </h3>
           <div className="flex flex-wrap gap-2">
             {promptSuggestions.map((suggestion, index) => (
               <button
@@ -219,8 +225,12 @@ export default function Generate() {
                   className="bg-deep-orange text-charcoal-black px-4 py-2 rounded-md hover:bg-opacity-90 hover:text-white transition duration-300 flex items-center"
                   disabled={isRegenerating}
                 >
-                  <RefreshCw className={`mr-2 h-4 w-4 ${isRegenerating ? 'animate-spin' : ''}`} />
-                  {isRegenerating ? 'Regenerating...' : 'Regenerate'}
+                  <RefreshCw
+                    className={`mr-2 h-4 w-4 ${
+                      isRegenerating ? "animate-spin" : ""
+                    }`}
+                  />
+                  {isRegenerating ? "Regenerating..." : "Regenerate"}
                 </button>
                 <button
                   onClick={handleOpen}
@@ -234,7 +244,9 @@ export default function Generate() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {isLoading
-              ? Array(9).fill(0).map((_, index) => <SkeletonCard key={index} />)
+              ? Array(9)
+                  .fill(0)
+                  .map((_, index) => <SkeletonCard key={index} />)
               : flashcards?.map((flashcard, index) => (
                   <motion.div
                     key={index}
@@ -249,13 +261,17 @@ export default function Generate() {
                       className="absolute w-full h-full backface-hidden flex justify-center items-center p-4 bg-white rounded-lg shadow-md"
                       style={{ backfaceVisibility: "hidden" }}
                     >
-                      <p className="text-center text-charcoal-black">{flashcard.front}</p>
+                      <p className="text-center text-charcoal-black">
+                        {flashcard.front}
+                      </p>
                     </motion.div>
                     <motion.div
                       className="absolute w-full h-full backface-hidden flex justify-center items-center p-4 bg-white rounded-lg shadow-md"
                       style={{ backfaceVisibility: "hidden", rotateY: 180 }}
                     >
-                      <p className="text-center text-charcoal-black">{flashcard.back}</p>
+                      <p className="text-center text-charcoal-black">
+                        {flashcard.back}
+                      </p>
                     </motion.div>
                   </motion.div>
                 ))}
@@ -266,8 +282,12 @@ export default function Generate() {
       {open && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg max-w-sm w-full">
-            <h2 className="text-2xl font-semibold mb-4 text-charcoal-black">Save Flashcards</h2>
-            <p className="mb-4 text-charcoal-black">Please enter a name for your flashcards collection</p>
+            <h2 className="text-2xl font-semibold mb-4 text-charcoal-black">
+              Save Flashcards
+            </h2>
+            <p className="mb-4 text-charcoal-black">
+              Please enter a name for your flashcards collection
+            </p>
             <input
               type="text"
               value={name}
