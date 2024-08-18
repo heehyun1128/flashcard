@@ -4,6 +4,7 @@ import { collection, doc, getDoc, writeBatch } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { db } from "@/firebase";
+
 import {
   Container,
   Button,
@@ -21,6 +22,9 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import Link from "next/link";
+import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 
 interface Flashcard {
   front: string;
@@ -66,8 +70,6 @@ export default function Generate() {
     }));
   };
 
-  
-
   const handleOpen = () => {
     setOpen(true);
   };
@@ -112,16 +114,34 @@ export default function Generate() {
     handleClose();
     router.push("/flashcards");
   };
+  const handleNextCard = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % flashcards?.length);
+  };
+
+  const handlePreviousCard = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? flashcards?.length - 1 : prevIndex - 1
+    );
+  };
 
   return (
     <Container maxWidth="md">
-      <Box className="mb-8 text-center">
-        <Typography
-          variant="h4"
-          className="text-2xl font-bold text-charcoal-black mb-4"
-        >
-          Generate Flashcards
-        </Typography>
+      <Box className="mb-20 text-center">
+        <div className="flex align-middle justify-between mb-10">
+          <Typography
+            variant="h4"
+            className="text-2xl font-bold text-charcoal-black mb-4"
+          >
+            Generate Flashcards
+          </Typography>
+
+          <Link href="/flashcards" passHref>
+            <button className="bg-gradient-to-r from-deep-orange to-light-orange text-charcoal-black font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl">
+              All Flashcards
+            </button>
+          </Link>
+        </div>
+
         <Box className="bg-orange-white p-6 rounded-lg shadow-lg">
           <TextField
             value={text}
@@ -151,90 +171,124 @@ export default function Generate() {
         </Box>
       </Box>
 
-      <Box sx={{width: "100%", display:"flex", justifyContent:"center"}}>
-      {flashcards?.map((flashcard, index) => (
-          <Box
-            key={index}
-            sx={{
-              position: "absolute",
-              width: "300px",
-              height: "400px",
-              zIndex: currentIndex === index ? 1 : 0, 
-            }}
-            onClick={() => handleCardClick(index)}
-          >
-            <Card
+      <div
+        className="flex-col justify-center align-middle"
+        style={{ height: "460px" }}
+      >
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+          {flashcards?.map((flashcard, index) => (
+            <Box
+              key={index}
               sx={{
                 position: "absolute",
-                height: "100%",
-                width: "100%",
-                borderRadius: "1rem",
-                // boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
-                transform: tilted[index]
-                  ? "translateZ(20px)"
-                  : " translateZ(0px)",
-                transformOrigin: "center bottom",
-                transition: "transform 0.6s, z-index 0s",
-                zIndex: tilted[index] ? 2 : 1, 
+                width: "300px",
+                height: "400px",
+                zIndex: currentIndex === index ? 1 : 0,
               }}
+              onClick={() => handleCardClick(index)}
             >
-              <Box
+              <Card
                 sx={{
                   position: "absolute",
-                  width: "100%",
                   height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "20px",
-                  backgroundColor: "#FFC671", 
-                  color: "gray", 
+                  width: "100%",
+                  borderRadius: "1rem",
+                  // boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
+                  transform: tilted[index]
+                    ? "translateZ(20px)"
+                    : " translateZ(0px)",
+                  transformOrigin: "center bottom",
+                  transition: "transform 0.6s, z-index 0s",
+                  zIndex: tilted[index] ? 2 : 1,
                 }}
               >
-                <Typography>
-                  {flashcard.back}
-                </Typography>
-              </Box>
-            </Card>
-            <Card
-              sx={{
-                position: "absolute",
-                height: "100%",
-                width: "100%",
-                borderRadius: "1rem",
-                // boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
-                transform: tilted[index]
-                  ? "rotateZ(-20deg) translateZ(0px)"
-                  : "rotateZ(0deg) translateZ(20px)",
-                transformOrigin: "center bottom",
-                transition: "transform 0.6s, z-index 0s",
-                zIndex: tilted[index] ? 1 : 2, // Purple card should be behind initially
-              }}
-            >
-              <Box
+                <Box
+                  sx={{
+                    position: "absolute",
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "20px",
+                    backgroundColor: "#FFC671",
+                    color: "gray",
+                  }}
+                >
+                  <Typography>{flashcard.back}</Typography>
+                </Box>
+              </Card>
+              <Card
                 sx={{
                   position: "absolute",
-                  width: "100%",
                   height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "20px",
-                  backgroundColor: "#8B98FF", // Purple card
-                  color: "white", // Text color
+                  width: "100%",
+                  borderRadius: "1rem",
+                  // boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
+                  transform: tilted[index]
+                    ? "rotateZ(-20deg) translateZ(0px)"
+                    : "rotateZ(0deg) translateZ(20px)",
+                  transformOrigin: "center bottom",
+                  transition: "transform 0.6s, z-index 0s",
+                  zIndex: tilted[index] ? 1 : 2, // Purple card should be behind initially
                 }}
               >
-                <Typography>
-                  {flashcard.front}
-                </Typography>
-              </Box>
-            </Card>
-          </Box>
-        ))}
-      </Box>
-          {flashcards?.length&&  <Button  variant="contained" color="secondary" onClick={handleOpen}>
-              Save
-            </Button>}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "20px",
+                    backgroundColor: "#8B98FF", // Purple card
+                    color: "white", // Text color
+                  }}
+                >
+                  <Typography>{flashcard.front}</Typography>
+                </Box>
+              </Card>
+            </Box>
+          ))}
+        </Box>
+      </div>
+
+      {flashcards?.length && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <div>
+            <button
+              onClick={handlePreviousCard}
+              className="bg-gradient-to-r from-deep-orange to-light-orange text-charcoal-black font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl"
+            >
+             {` << Back`}
+            </button>
+            <button
+              onClick={handleNextCard}
+              className="bg-gradient-to-r from-deep-orange to-light-orange text-charcoal-black font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl ml-20"
+            >
+             { `Next >>`}
+            </button>
+          </div>
+          {flashcards?.length && (
+            <button className="bg-gradient-to-r from-charcoal-black to-black text-white font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl"
+            onClick={handleOpen}>
+              Save Flashcard Group
+            </button>
+          )}
+        </Box>
+      )}
+
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Save Flashcards</DialogTitle>
         <DialogContent>

@@ -31,11 +31,15 @@ export default function Home() {
       <Hero />
 
       <div className="relative z-50 ">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold">Planning to learn something today?</h2>
+      </div>
+      
         <FlashcardDemo />
       </div>
-      {/* <div className="z-50 relative">
+      <div className="z-50 relative">
         <Credits />
-      </div> */}
+      </div>
     
     </div>
   );

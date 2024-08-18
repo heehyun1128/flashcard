@@ -66,6 +66,9 @@ export default function Flashcard() {
     <Container
       sx={{ width: "100vw", display: "flex", flexDirection: "column", alignItems: "center" }}
     >
+       <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold uppercase">{search}</h2>
+      </div>
       <Box sx={{ position: "relative", width: "300px", height: "400px", marginBottom: "16px" }}>
         {flashcards.map((flashcard, index) => (
           <Box
@@ -147,23 +150,20 @@ export default function Flashcard() {
           </Box>
         ))}
       </Box>
-      <Box sx={{ display: "flex", gap: "8px" }}>
-        <button
-          onClick={handlePreviousCard}
-      
-         
-        >
-            <KeyboardDoubleArrowLeftIcon/>
-          Back
-        </button>
-        <button
-          onClick={handleNextCard}
-        
-        
-        >
-          Next <DoubleArrowIcon/>
-        </button>
-      </Box>
+      <div style={{marginTop:"50px"}}>
+            <button
+              onClick={handlePreviousCard}
+              className="bg-gradient-to-r from-deep-orange to-light-orange text-charcoal-black font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl"
+            >
+             {` << Back`}
+            </button>
+            <button
+              onClick={handleNextCard}
+              className="bg-gradient-to-r from-deep-orange to-light-orange text-charcoal-black font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl ml-20"
+            >
+             { `Next >>`}
+            </button>
+          </div>
     </Container>
   );
 }

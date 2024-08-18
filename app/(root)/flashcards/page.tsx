@@ -51,6 +51,9 @@ export default function Flashcards() {
 
   return (
     <Container maxWidth="lg">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold">All Flashcard Groups</h2>
+      </div>
       <Grid container spacing={3} sx={{ mt: 4 }}>
         {flashcards.map((flashcard, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
