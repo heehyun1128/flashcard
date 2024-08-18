@@ -2,29 +2,11 @@
 import { useUser } from "@clerk/nextjs";
 import { collection, doc, getDoc, writeBatch } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { db } from "@/firebase";
-
-import {
-  Container,
-  Button,
-  Box,
-  Typography,
-  TextField,
-  Paper,
-  Grid,
-  Card,
-  CardActionArea,
-  CardContent,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-} from "@mui/material";
+import { motion } from "framer-motion";
 import Link from "next/link";
-import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
-import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import { Loader2, RefreshCw, Save } from "lucide-react";
 
 interface Flashcard {
   front: string;
@@ -32,26 +14,65 @@ interface Flashcard {
 }
 
 interface FlippedState {
-  [key: number]: boolean; // Use number instead of string for index
+  [key: number]: boolean;
 }
+
+const SkeletonCard = () => (
+  <div className="w-full h-48 bg-gray-200 rounded-lg animate-pulse"></div>
+);
 
 export default function Generate() {
   const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
+
+  useEffect(() => {
+    if (isLoaded) {
+      if (!isSignedIn) {
+        router.push('/');
+      }
+    }
+  }, [isLoaded, isSignedIn, router]);
+
+  if (!isLoaded || !isSignedIn) {
+    return null;
+  }
 
   const [flashcards, setFlashcards] = useState<Flashcard[] | null>(null);
   const [flipped, setFlipped] = useState<FlippedState>({});
   const [text, setText] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [tilted, setTilted] = useState<{ [key: string]: boolean }>({});
+  const [hasExistingFlashcards, setHasExistingFlashcards] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRegenerating, setIsRegenerating] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkExistingFlashcards = async () => {
+      if (user?.id) {
+        const userDocRef = doc(collection(db, "users"), user.id);
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists()) {
+          const collections = docSnap.data().flashcards || [];
+          setHasExistingFlashcards(collections.length > 0);
+        }
+      }
+    };
+
+    checkExistingFlashcards();
+  }, [user]);
 
   const handleSubmit = async () => {
+    if (!text.trim()) {
+      setError("Please enter some text before generating flashcards.");
+      return;
+    }
+    setError(null);
+    setIsLoading(true);
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
-        body: JSON.stringify({ text }), // Ensure text is serialized as JSON
+        body: JSON.stringify({ text }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -60,13 +81,17 @@ export default function Generate() {
       setFlashcards(data);
     } catch (error) {
       console.error("Error:", error);
+      setError("An error occurred while generating flashcards. Please try again.");
+    } finally {
+      setIsLoading(false);
+      setIsRegenerating(false);
     }
   };
 
-  const handleCardClick = (id: number) => {
-    setTilted((prev) => ({
+  const handleCardClick = (index: number) => {
+    setFlipped((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      [index]: !prev[index],
     }));
   };
 
@@ -114,207 +139,159 @@ export default function Generate() {
     handleClose();
     router.push("/flashcards");
   };
-  const handleNextCard = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % flashcards?.length);
-  };
 
-  const handlePreviousCard = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? flashcards?.length - 1 : prevIndex - 1
-    );
-  };
+  const promptSuggestions = [
+    "Explain the key concepts of photosynthesis",
+    "Summarize the main events of World War II",
+    "List the fundamental principles of economics",
+    "Describe the structure of a human cell",
+    "Outline the plot of Shakespeare's Hamlet"
+  ];
 
   return (
-    <Container maxWidth="md">
-      <Box className="mb-20 text-center">
-        <div className="flex align-middle justify-between mb-10">
-          <Typography
-            variant="h4"
-            className="text-2xl font-bold text-charcoal-black mb-4"
-          >
-            Generate Flashcards
-          </Typography>
-
-          <Link href="/flashcards" passHref>
-            <button className="bg-gradient-to-r from-deep-orange to-light-orange text-charcoal-black font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl">
-              All Flashcards
-            </button>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col items-center justify-center mb-8">
+        <h1 className="text-4xl font-semibold mb-6 text-charcoal-black">Generate Flashcards</h1>
+        {hasExistingFlashcards && (
+          <Link href="/flashcards" className="mb-4 text-deep-orange hover:text-charcoal-black transition duration-300">
+            View Existing Flashcards
           </Link>
-        </div>
-
-        <Box className="bg-orange-white p-6 rounded-lg shadow-lg">
-          <TextField
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            label="Enter text"
-            fullWidth
-            multiline
-            rows={4}
-            variant="outlined"
-            className="mb-4"
-            InputLabelProps={{
-              className: "text-charcoal-black",
-            }}
-            InputProps={{
-              className: "text-charcoal-black",
-            }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-            fullWidth
-            className="bg-accent-blue hover:bg-accent-blue-dark"
-          >
-            Submit
-          </Button>
-        </Box>
-      </Box>
-
-      <div
-        className="flex-col justify-center align-middle"
-        style={{ height: "460px" }}
-      >
-        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-          {flashcards?.map((flashcard, index) => (
-            <Box
-              key={index}
-              sx={{
-                position: "absolute",
-                width: "300px",
-                height: "400px",
-                zIndex: currentIndex === index ? 1 : 0,
+        )}
+        <div className="w-full max-w-2xl bg-orange-white p-6 rounded-lg shadow-md shadow-deep-orange">
+          <div className="relative flex flex-col items-center">
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Enter your learning material or choose a prompt suggestion below"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-orange resize-none transition-all duration-300 min-h-[150px] text-charcoal-black"
+              style={{ height: text ? 'auto' : '150px' }}
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = 'auto';
+                target.style.height = `${Math.max(target.scrollHeight, 150)}px`;
               }}
-              onClick={() => handleCardClick(index)}
-            >
-              <Card
-                sx={{
-                  position: "absolute",
-                  height: "100%",
-                  width: "100%",
-                  borderRadius: "1rem",
-                  // boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
-                  transform: tilted[index]
-                    ? "translateZ(20px)"
-                    : " translateZ(0px)",
-                  transformOrigin: "center bottom",
-                  transition: "transform 0.6s, z-index 0s",
-                  zIndex: tilted[index] ? 2 : 1,
-                }}
-              >
-                <Box
-                  sx={{
-                    position: "absolute",
-                    width: "100%",
-                    height: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "20px",
-                    backgroundColor: "#FFC671",
-                    color: "gray",
-                  }}
-                >
-                  <Typography>{flashcard.back}</Typography>
-                </Box>
-              </Card>
-              <Card
-                sx={{
-                  position: "absolute",
-                  height: "100%",
-                  width: "100%",
-                  borderRadius: "1rem",
-                  // boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
-                  transform: tilted[index]
-                    ? "rotateZ(-20deg) translateZ(0px)"
-                    : "rotateZ(0deg) translateZ(20px)",
-                  transformOrigin: "center bottom",
-                  transition: "transform 0.6s, z-index 0s",
-                  zIndex: tilted[index] ? 1 : 2, // Purple card should be behind initially
-                }}
-              >
-                <Box
-                  sx={{
-                    position: "absolute",
-                    width: "100%",
-                    height: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "20px",
-                    backgroundColor: "#8B98FF", // Purple card
-                    color: "white", // Text color
-                  }}
-                >
-                  <Typography>{flashcard.front}</Typography>
-                </Box>
-              </Card>
-            </Box>
-          ))}
-        </Box>
-      </div>
-
-      {flashcards?.length && (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "8px",
-
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          <div>
+            />
             <button
-              onClick={handlePreviousCard}
-              className="bg-gradient-to-r from-deep-orange to-light-orange text-charcoal-black font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl"
+              onClick={handleSubmit}
+              className="mt-4 bg-deep-orange text-charcoal-black px-6 py-2 rounded-md hover:bg-opacity-90 hover:text-white transition duration-300 flex items-center justify-center"
+              disabled={isLoading}
             >
-             {` << Back`}
-            </button>
-            <button
-              onClick={handleNextCard}
-              className="bg-gradient-to-r from-deep-orange to-light-orange text-charcoal-black font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl ml-20"
-            >
-             { `Next >>`}
+              {isLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                "Generate Flashcards"
+              )}
             </button>
           </div>
-          {flashcards?.length && (
-            <button className="bg-gradient-to-r from-charcoal-black to-black text-white font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl"
-            onClick={handleOpen}>
-              Save Flashcard Group
-            </button>
-          )}
-        </Box>
+        </div>
+        {error && (
+          <p className="mt-4 text-red-500">{error}</p>
+        )}
+        <div className="mt-6 w-full max-w-2xl">
+          <h3 className="text-lg font-semibold mb-2 text-charcoal-black">Prompt Suggestions:</h3>
+          <div className="flex flex-wrap gap-2">
+            {promptSuggestions.map((suggestion, index) => (
+              <button
+                key={index}
+                onClick={() => setText(suggestion)}
+                className="bg-light-orange text-charcoal-black px-3 py-1 rounded-full text-sm hover:bg-deep-orange hover:text-white transition duration-300"
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {(isLoading || flashcards?.length) && (
+        <div className="mt-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-semibold text-charcoal-black">
+              {isLoading ? "Generating Flashcards..." : "Flashcards Preview"}
+            </h2>
+            {!isLoading && flashcards && flashcards.length > 0 && (
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => {
+                    setIsRegenerating(true);
+                    handleSubmit();
+                  }}
+                  className="bg-deep-orange text-charcoal-black px-4 py-2 rounded-md hover:bg-opacity-90 hover:text-white transition duration-300 flex items-center"
+                  disabled={isRegenerating}
+                >
+                  <RefreshCw className={`mr-2 h-4 w-4 ${isRegenerating ? 'animate-spin' : ''}`} />
+                  {isRegenerating ? 'Regenerating...' : 'Regenerate'}
+                </button>
+                <button
+                  onClick={handleOpen}
+                  className="bg-deep-orange text-charcoal-black px-4 py-2 rounded-md hover:bg-opacity-90 hover:text-white transition duration-300 flex items-center"
+                >
+                  <Save className="mr-2 h-4 w-4" />
+                  Save
+                </button>
+              </div>
+            )}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {isLoading
+              ? Array(9).fill(0).map((_, index) => <SkeletonCard key={index} />)
+              : flashcards?.map((flashcard, index) => (
+                  <motion.div
+                    key={index}
+                    className="cursor-pointer w-full h-48"
+                    onClick={() => handleCardClick(index)}
+                    initial={false}
+                    animate={{ rotateY: flipped[index] ? 180 : 0 }}
+                    transition={{ duration: 0.6 }}
+                    style={{ transformStyle: "preserve-3d" }}
+                  >
+                    <motion.div
+                      className="absolute w-full h-full backface-hidden flex justify-center items-center p-4 bg-white rounded-lg shadow-md"
+                      style={{ backfaceVisibility: "hidden" }}
+                    >
+                      <p className="text-center text-charcoal-black">{flashcard.front}</p>
+                    </motion.div>
+                    <motion.div
+                      className="absolute w-full h-full backface-hidden flex justify-center items-center p-4 bg-white rounded-lg shadow-md"
+                      style={{ backfaceVisibility: "hidden", rotateY: 180 }}
+                    >
+                      <p className="text-center text-charcoal-black">{flashcard.back}</p>
+                    </motion.div>
+                  </motion.div>
+                ))}
+          </div>
+        </div>
       )}
 
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Save Flashcards</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please enter a name for your flashcards collection
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Collection Name"
-            type="text"
-            fullWidth
-            value={name}
-            variant="outlined"
-            onChange={(e) => setName(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={saveFlashcards} color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+      {open && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg max-w-sm w-full">
+            <h2 className="text-2xl font-semibold mb-4 text-charcoal-black">Save Flashcards</h2>
+            <p className="mb-4 text-charcoal-black">Please enter a name for your flashcards collection</p>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Collection Name"
+              className="w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-deep-orange"
+            />
+            <div className="flex justify-end">
+              <button
+                onClick={handleClose}
+                className="mr-2 px-4 py-2 text-charcoal-black hover:bg-gray-100 rounded-md transition duration-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveFlashcards}
+                className="px-4 py-2 bg-deep-orange text-charcoal-black rounded-md hover:text-white transition duration-300"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

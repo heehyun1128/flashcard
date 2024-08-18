@@ -4,28 +4,39 @@ import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
-import { useSearchParams } from "next/navigation";
-import { Box, Card, Container, Typography, Button } from "@mui/material";
-import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import { useRouter, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+
 interface FlashcardData {
   id: string;
   front: string;
   back: string;
 }
 
+const LoadingScreen: React.FC = () => (
+  <div className="flex justify-center items-center h-screen">
+    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-deep-orange"></div>
+  </div>
+);
+
 export default function Flashcard() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [flashcards, setFlashcards] = useState<FlashcardData[]>([]);
-  const [tilted, setTilted] = useState<{ [key: string]: boolean }>({});
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
+  const router = useRouter();
   const searchParams = useSearchParams();
   const search = searchParams.get("id");
 
   useEffect(() => {
     async function getFlashcards() {
-      if (!search || !user) return;
+      if (!search || !user) {
+        setIsLoading(false);
+        return;
+      }
 
       const colRef = collection(doc(collection(db, "users"), user.id), search);
       const docs = await getDocs(colRef);
@@ -36,16 +47,28 @@ export default function Flashcard() {
         flashcards.push({ id: doc.id, ...doc.data() } as FlashcardData);
       });
       setFlashcards(flashcards);
+      setIsLoading(false);
     }
 
     getFlashcards();
   }, [user, search]);
 
-  const handleCardClick = (id: string) => {
-    setTilted((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+  const handleCardClick = () => {
+    setFlipped(!flipped);
+  };
+
+  const handleNextCard = () => {
+    setCurrentCardIndex((prevIndex) => (prevIndex + 1) % flashcards.length);
+    setFlipped(false);
+  };
+
+  const handlePrevCard = () => {
+    setCurrentCardIndex((prevIndex) => (prevIndex - 1 + flashcards.length) % flashcards.length);
+    setFlipped(false);
+  };
+
+  const handleBackClick = () => {
+    router.push('/flashcards');
   };
 
   const handleNextCard = () => {
@@ -58,112 +81,62 @@ export default function Flashcard() {
     );
   };
 
-  if (!isLoaded || !isSignedIn) {
-    return <></>;
+  if (!isLoaded || !isSignedIn || isLoading) {
+    return <LoadingScreen />;
   }
 
   return (
-    <Container
-      sx={{ width: "100vw", display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
-       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold uppercase">{search}</h2>
-      </div>
-      <Box sx={{ position: "relative", width: "300px", height: "400px", marginBottom: "16px" }}>
-        {flashcards.map((flashcard, index) => (
-          <Box
-            key={flashcard.id}
-            sx={{
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              zIndex: currentIndex === index ? 1 : 0, 
-            }}
-            onClick={() => handleCardClick(flashcard.id)}
+    <div className="flex flex-col items-center justify-center min-h-screen container mx-auto px-4 py-16 md:py-24 lg:py-32 max-w-7xl">
+      <button
+        onClick={handleBackClick}
+        className="mb-8 flex items-center text-deep-orange hover:text-charcoal-black transition duration-300"
+      >
+        <ArrowLeft className="mr-2" size={20} />
+        Back to Flashcards
+      </button>
+      {flashcards.length > 0 && (
+        <div className="max-w-2xl w-full">
+          <motion.div
+            className="w-full h-96 relative bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer"
+            onClick={handleCardClick}
+            initial={false}
+            animate={{ rotateY: flipped ? 180 : 0 }}
+            transition={{ duration: 0.6 }}
+            style={{ transformStyle: "preserve-3d" }}
           >
-            <Card
-              sx={{
-                position: "absolute",
-                height: "100%",
-                width: "100%",
-                borderRadius: "1rem",
-                // boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
-                transform: tilted[flashcard.id]
-                  ? "translateZ(20px)"
-                  : " translateZ(0px)",
-                transformOrigin: "center bottom",
-                transition: "transform 0.6s, z-index 0s",
-                zIndex: tilted[flashcard.id] ? 2 : 1, 
-              }}
+            <motion.div
+              className="absolute w-full h-full backface-hidden flex flex-col justify-center items-center p-8"
+              style={{ backfaceVisibility: "hidden" }}
             >
-              <Box
-                sx={{
-                  position: "absolute",
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "20px",
-                  backgroundColor: "#FFC671", 
-                  color: "gray", 
-                }}
-              >
-                <Typography>
-                  {flashcard.back}
-                </Typography>
-              </Box>
-            </Card>
-            <Card
-              sx={{
-                position: "absolute",
-                height: "100%",
-                width: "100%",
-                borderRadius: "1rem",
-                // boxShadow: "8px 4px 8px rgba(0, 0, 0, 0.21)",
-                transform: tilted[flashcard.id]
-                  ? "rotateZ(-20deg) translateZ(0px)"
-                  : "rotateZ(0deg) translateZ(20px)",
-                transformOrigin: "center bottom",
-                transition: "transform 0.6s, z-index 0s",
-                zIndex: tilted[flashcard.id] ? 1 : 2, // Purple card should be behind initially
-              }}
-            >
-              <Box
-                sx={{
-                  position: "absolute",
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "20px",
-                  backgroundColor: "#8B98FF", // Purple card
-                  color: "white", // Text color
-                }}
-              >
-                <Typography>
-                  {flashcard.front}
-                </Typography>
-              </Box>
-            </Card>
-          </Box>
-        ))}
-      </Box>
-      <div style={{marginTop:"50px"}}>
+              <h2 className="text-2xl font-bold mb-4 text-deep-orange" style={{ transform: flipped ? 'rotateY(180deg)' : 'none' }}>
+                {flipped ? "Answer" : "Question"}
+              </h2>
+              <p className="text-charcoal-black text-xl text-center" style={{ transform: flipped ? 'rotateY(180deg)' : 'none' }}>
+                {flipped ? flashcards[currentCardIndex].back : flashcards[currentCardIndex].front}
+              </p>
+            </motion.div>
+          </motion.div>
+          <div className="flex justify-between items-center mt-8">
             <button
-              onClick={handlePreviousCard}
-              className="bg-gradient-to-r from-deep-orange to-light-orange text-charcoal-black font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl"
+              onClick={handlePrevCard}
+              className="flex items-center text-deep-orange hover:text-charcoal-black transition duration-300"
             >
-             {` << Back`}
+              <ChevronLeft size={24} />
+              Previous
             </button>
+            <span className="text-charcoal-black">
+              {currentCardIndex + 1} / {flashcards.length}
+            </span>
             <button
               onClick={handleNextCard}
-              className="bg-gradient-to-r from-deep-orange to-light-orange text-charcoal-black font-bold py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg backdrop-filter backdrop-blur-3xl ml-20"
+              className="flex items-center text-deep-orange hover:text-charcoal-black transition duration-300"
             >
-             { `Next >>`}
+              Next
+              <ChevronRight size={24} />
             </button>
           </div>
-    </Container>
+        </div>
+      )}
+    </div>
   );
 }

@@ -1,122 +1,68 @@
 "use client";
-import { SignedIn, useAuth } from "@clerk/nextjs";
+// import { SignedIn, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Checkout from "./Checkout";
-import { Button } from "@mui/material";
+import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
 
 export const plans = [
   {
     _id: 1,
-    name: "Free",
-    intro: "The start of your improved productivity",
+    name: "Basic",
+    intro: "Start your AI-powered flashcard journey",
     price: 0,
-
-    inclusions: {
-      header: "The Free plan includes:",
-      content: [
-        {
-          label: "Unlimited flashcard generations",
-          isIncluded: true,
-        },
-        {
-          label: "Unlimited private flashcard lists",
-          isIncluded: true,
-        },
-        {
-          label: "5 Shared Flashcard lists shared with up to 5 people",
-          isIncluded: true,
-        },
-        {
-          label:
-            "Gmail, Google Calendar, Microsoft To Do and email forwarding integrations",
-          isIncluded: false,
-        },
-      ],
-    },
+    inclusions: [
+      "50 AI-generated flashcards per month",
+      "5 flashcard decks",
+      "Basic spaced repetition algorithm",
+    ],
   },
   {
     _id: 2,
     name: "Pro",
-    intro: "Unlock a new level of personal productivity",
-    price: 8,
-    subPrice: "That's $96 yearly",
-
-    inclusions: {
-      header: "Everything in Free, plus:",
-      content: [
-        {
-          label: "Unlimited shared lists",
-          isIncluded: true,
-        },
-        {
-          label: "Unlimited shared lists with up to 25 people",
-          isIncluded: true,
-        },
-        {
-          label: "Slack, Github, Linear and Figma integrations",
-          isIncluded: true,
-        },
-        {
-          label: "Up to 500MB upload & 25GB file storage",
-          isIncluded: true,
-        },
-        {
-          label: "Al list creation",
-          isIncluded: true,
-        },
-      ],
-    },
+    intro: "Unlock advanced AI flashcard features",
+    price: 9.99,
+    subPrice: "That's $119.88 yearly",
+    inclusions: [
+      "Unlimited AI-generated flashcards",
+      "Unlimited flashcard decks",
+      "Advanced spaced repetition algorithm",
+      "Custom AI model fine-tuning",
+      "Priority AI generation queue",
+    ],
+    popular: true,
   },
   {
     _id: 3,
-    name: "Free Team",
-    intro: "For smaller teams to organize their work",
-    price: 0,
-    subPrice: "",
-
-    inclusions: {
-      header: "Everything in Free, plus:",
-      content: [
-        {
-          label: "Up to 5 team members",
-          isIncluded: true,
-        },
-        {
-          label: "15 shared lists between team members",
-          isIncluded: true,
-        },
-      ],
-    },
+    name: "Team",
+    intro: "Collaborative AI flashcards for groups",
+    price: 29.99,
+    subPrice: "Up to 5 team members",
+    inclusions: [
+      "Everything in Pro, plus:",
+      "Shared team flashcard decks",
+      "Team progress analytics",
+      "Collaborative AI model training",
+    ],
   },
   {
     _id: 4,
-    name: "Pro Team",
-    intro: "Maximize productivity across your entire team",
-    price: 10,
-    subPrice: "120 per member yearly",
-
-    inclusions: {
-      header: "Everything in Pro, plus:",
-      content: [
-        {
-          label: "Unlimited team members",
-          isIncluded: true,
-        },
-        {
-          label: "Everyone in the team will be upgraded to personal Pro too",
-          isIncluded: true,
-        },
-        {
-          label: "Unlimited shared lists with team members and guests",
-          isIncluded: true,
-        },
-      ],
-    },
+    name: "Enterprise",
+    intro: "Custom AI solutions for large organizations",
+    price: 99.99,
+    subPrice: "Custom pricing for 50+ users",
+    inclusions: [
+      "Everything in Team, plus:",
+      "Dedicated AI model",
+      "API access for custom integrations",
+      "24/7 premium support",
+    ],
   },
 ];
 
 const Credits = () => {
-  const { userId } = useAuth();
+  // const { userId } = useAuth();
   const router = useRouter();
 
   // if (!userId) {
@@ -125,55 +71,53 @@ const Credits = () => {
   // }
 
   return (
-    <div className="container  mx-auto mt-10 mb-10 z-50">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold">Choose Your Plan</h2>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 p-16 pt-10 pb-10 bg-light-orange rounded-lg ">
-        {plans.map((plan) => (
-          <div
-            key={plan._id}
-            className=" bg-[#f5f5f0] p-6 border border-gray-300 rounded-2xl text-center"
-          >
-            <h3 className="text-4xl font-semibold mb-4">{plan.name}</h3>
-            <p className="text-sm mb-4">{plan.intro}</p>
-            <div className="flex items-center justify-center font-medium mb-2">
-              <p className="mr-2 text-2xl">${plan.price}</p>
-              <span className="text-md ">Per Month</span>
-            </div>
-              <p className="mr-2 text-sm">{plan.subPrice}</p>
-
-            <ul className="mb-4 flex flex-col items-start text-left">
-              <p className="text-md mb-4 p-2 ">
-                {plan.inclusions.header}{" "}
-              </p>
-              {plan.inclusions.content.map((inclusion) => (
-                <li key={inclusion.label} className="flex items-center mb-2">
-                  <span className="ml-2 text-sm">{inclusion.label}</span>
-                </li>
-              ))}
-            </ul>
-
-            {plan.price==0 ? (
-              
-              <button
-              className="text-deep-orange bg-charcoal-black font-light py-3 px-8 rounded-md text-md transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 backdrop-filter backdrop-blur-3xl w-full"
+    <div className="bg-gradient-to-b min-h-1000px py-10">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold text-charcoal-black mb-4">Choose Your AI Flashcard Plan</h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">Unlock the power of AI-driven learning with our flexible pricing options</p>
+        </div>
+        <Link href="/" className="text-deep-orange hover:text-charcoal-black transition-colors duration-300 mb-8 inline-block">
+          ← Back to Homepage
+        </Link>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {plans.map((plan) => (
+            <div
+              key={plan._id}
+              className={`bg-white p-8 rounded-3xl shadow-xl transition-all duration-300 hover:shadow-2xl flex flex-col justify-between relative ${plan.popular ? 'border-4 border-deep-orange' : ''}`}
             >
-              <a href={userId?`/generate`:`/sign-in`}>Get Started For Free</a>
-            </button>
-            
-              ) : userId?(
-                <SignedIn>
-                  <Checkout
-                    plan={plan.name}
-                    payAmount={plan.price}
-                    
-                    userId={userId}
-                  />
-                </SignedIn>
-              ):""}
-          </div>
-        ))}
+              {plan.popular && (
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-deep-orange text-white py-1 px-4 rounded-full text-sm font-semibold">
+                  Most Popular
+                </div>
+              )}
+              <div>
+                <h3 className="text-2xl font-bold mb-2 text-charcoal-black">{plan.name}</h3>
+                <p className="text-sm mb-6 text-gray-600">{plan.intro}</p>
+                <div className="flex items-baseline mb-6">
+                  <span className="text-5xl font-bold text-charcoal-black">${plan.price}</span>
+                  <span className="text-xl text-gray-600 ml-2">/month</span>
+                </div>
+                {plan.subPrice && <p className="text-sm text-gray-500 mb-6">{plan.subPrice}</p>}
+                <ul className="mb-8 space-y-3">
+                  {plan.inclusions.map((inclusion) => (
+                    <li key={inclusion} className="flex items-center">
+                      <Check className="h-5 w-5 text-deep-orange mr-2" />
+                      <span className="text-sm text-gray-700">{inclusion}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <Button
+                variant={plan.popular ? "default" : "secondary"}
+                className={`w-full py-3 ${plan.popular ? 'bg-deep-orange hover:bg-deep-orange-dark text-white' : ''}`}
+                disabled={true}
+              >
+                Coming Soon
+              </Button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
