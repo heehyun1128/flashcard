@@ -21,7 +21,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className="bg-orange-white">
         <body className={`${inter.className} text-charcoal-black`}>
-          {/* <Navbar /> */}
+          <Navbar />
           {children}
           {/* <Footer /> */}
         </body>

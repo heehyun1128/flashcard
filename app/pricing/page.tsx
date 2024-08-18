@@ -1,14 +1,16 @@
 
 import Credits from '@/components/transaction/Credits'
+import Footer from '@/components/Footer'
 
-const page = () => {
+const pricing = () => {
   return (
-    <div>
+    <>
       <Credits />
-    </div>
+      <Footer />
+    </>
 
   )
 }
 
-export default page
+export default pricing;
 

@@ -4,19 +4,22 @@ import FeatureCard from '@/components/FeatureCard';
 
 const featureData = [
   {
-    title: "Tasks, notes & everything in between.",
-    videoSrc: "/video/main.mp4",
-    videoOnRight: true
+    title: "AI-Generated Flashcards: Learn Smarter, Not Harder",
+    // videoSrc: "/video/main.mp4",
+    imageSrc: "/images/flashcard.svg",
+    mediaOnRight: true
   },
   {
-    title: "Organize your workflow efficiently.",
-    videoSrc: "/video/main.mp4",
-    videoOnRight: false
+    title: "Share and Collaborate: Effortless Flashcard Exchange",
+    // videoSrc: "/video/main.mp4",
+    imageSrc: "/images/multiplayer.svg",
+    mediaOnRight: false
   },
   {
-    title: "Collaborate seamlessly with your team.",
-    videoSrc: "/video/main.mp4",
-    videoOnRight: true
+    title: "Ensuring Accuracy: Leveraging RAG for Reliable Information",
+    // videoSrc: "/video/main.mp4",
+    imageSrc: "/images/pinecone.svg",
+    mediaOnRight: true
   }
 ];
 
@@ -44,8 +47,9 @@ const Features: React.FC = () => {
         >
           <FeatureCard
             title={feature.title}
-            videoSrc={feature.videoSrc}
-            videoOnRight={feature.videoOnRight}
+            // videoSrc={feature.videoSrc}
+            imageSrc={feature.imageSrc}
+            mediaOnRight={feature.mediaOnRight}
           />
         </motion.div>
       ))}

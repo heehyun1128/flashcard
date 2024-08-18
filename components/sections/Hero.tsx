@@ -6,7 +6,7 @@ import { useAuth } from "@clerk/nextjs";
 import { mainAnimationProps } from "@/utils/motion";
 import { Button } from "@/components/ui/button";
 
-const Hero: React.FC = () => {
+const Hero: React.FC<{ isSuccess: boolean }> = ({ isSuccess }) => {
   const { isSignedIn } = useAuth();
 
   return (
@@ -60,7 +60,7 @@ const Hero: React.FC = () => {
             <Link href="#footer" passHref>
               <Button 
                 variant="secondary" 
-                className="w-full sm:w-auto"
+                className={`w-full sm:w-auto ${isSuccess ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
                   document.querySelector('#footer')?.scrollIntoView({
@@ -68,7 +68,7 @@ const Hero: React.FC = () => {
                   });
                 }}
               >
-                Join the waitlist
+                {isSuccess ? "Already on waitlist" : "Join the waitlist"}
               </Button>
             </Link>
           </>
@@ -87,7 +87,7 @@ const Hero: React.FC = () => {
       >
         <div className="absolute inset-0 bg-deep-orange opacity-30 filter blur-3xl"></div>
         <video
-          src="/video/main.mp4"
+          src="https://videos.pexels.com/video-files/18069830/18069830-uhd_2560_1440_24fps.mp4"
           width={1200}
           height={600}
           autoPlay
