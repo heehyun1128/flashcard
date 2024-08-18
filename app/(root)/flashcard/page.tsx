@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 
 interface FlashcardData {
   id: string;
@@ -52,21 +53,34 @@ export default function Flashcard() {
     <div className="container mx-auto px-4 py-16 mt-44 md:py-24 lg:py-32">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {flashcards.map((flashcard) => (
-          <div key={flashcard.id} className="perspective-1000">
-            <div
-              className={`relative w-full h-64 transition-transform duration-600 transform-style-3d shadow-lg ${
-                flipped[flashcard.id] ? 'rotate-y-180' : ''
-              }`}
-              onClick={() => handleCardClick(flashcard.id)}
+          <motion.div
+            key={flashcard.id}
+            className="cursor-pointer"
+            onClick={() => handleCardClick(flashcard.id)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <motion.div
+              className="w-full h-64 relative"
+              initial={false}
+              animate={{ rotateY: flipped[flashcard.id] ? 180 : 0 }}
+              transition={{ duration: 0.6 }}
+              style={{ transformStyle: "preserve-3d" }}
             >
-              <div className="absolute w-full h-full backface-hidden flex justify-center items-center p-4 bg-orange-white rounded-lg">
+              <motion.div
+                className="absolute w-full h-full backface-hidden flex justify-center items-center p-4 bg-orange-white rounded-lg shadow-lg"
+                style={{ backfaceVisibility: "hidden" }}
+              >
                 <p className="text-charcoal-black text-lg font-semibold">{flashcard.front}</p>
-              </div>
-              <div className="absolute w-full h-full backface-hidden flex justify-center items-center p-4 bg-orange-white rounded-lg rotate-y-180">
+              </motion.div>
+              <motion.div
+                className="absolute w-full h-full backface-hidden flex justify-center items-center p-4 bg-orange-white rounded-lg shadow-lg"
+                style={{ backfaceVisibility: "hidden", rotateY: 180 }}
+              >
                 <p className="text-charcoal-black text-lg">{flashcard.back}</p>
-              </div>
-            </div>
-          </div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
         ))}
       </div>
     </div>

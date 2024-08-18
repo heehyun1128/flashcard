@@ -7,10 +7,10 @@ import { headerAnimationProps } from "@/utils/motion";
 
 const Navbar: React.FC = () => {
   return (
-    <header className="container mx-auto px-6 py-8 flex items-center justify-center relative z-10">
+    <header className="container mx-auto px-6 py-8 flex items-center justify-between relative z-10">
       <motion.div
         {...headerAnimationProps}
-        className="text-charcoal-black flex items-center justify-center w-full"
+        className="text-charcoal-black flex items-center"
       >
         <Link href="/">
           <motion.img 
@@ -31,6 +31,16 @@ const Navbar: React.FC = () => {
           />
         </Link>
       </motion.div>
+      <div className="flex items-center space-x-4">
+        <SignedOut>
+          <Link href="/sign-in" passHref>
+            <Button variant="secondary">Sign In</Button>
+          </Link>
+        </SignedOut>
+        <SignedIn>
+          <UserButton afterSignOutUrl="/" />
+        </SignedIn>
+      </div>
     </header>
   );
 };

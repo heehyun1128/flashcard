@@ -2,12 +2,12 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-// import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { mainAnimationProps } from "@/utils/motion";
 import { Button } from "@/components/ui/button";
 
 const Hero: React.FC = () => {
-  // const { isSignedIn } = useAuth();
+  const { isSignedIn } = useAuth();
 
   return (
     <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-16 text-center relative z-10">
@@ -44,28 +44,35 @@ const Hero: React.FC = () => {
         transition={{ delay: 0.4, duration: 0.5 }}
         className="mt-12 flex justify-center space-x-4"
       >
-        {/* {isSignedIn ? (
+        {isSignedIn ? (
           <Link href="/generate" passHref>
             <Button variant="secondary" className="w-full sm:w-auto">
               Generate Flashcards
             </Button>
           </Link>
-        ) : ( */}
-          <Link href="#footer" passHref>
-            <Button 
-              variant="secondary" 
-              className="w-full sm:w-auto"
-              onClick={(e) => {
-                e.preventDefault();
-                document.querySelector('#footer')?.scrollIntoView({
-                  behavior: 'smooth'
-                });
-              }}
-            >
-              Join the waitlist
-            </Button>
-          </Link>
-        {/* )} */}
+        ) : (
+          <>
+            <Link href="/sign-in" passHref>
+              <Button variant="secondary" className="w-full sm:w-auto">
+                Sign in to try out
+              </Button>
+            </Link>
+            <Link href="#footer" passHref>
+              <Button 
+                variant="secondary" 
+                className="w-full sm:w-auto"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.querySelector('#footer')?.scrollIntoView({
+                    behavior: 'smooth'
+                  });
+                }}
+              >
+                Join the waitlist
+              </Button>
+            </Link>
+          </>
+        )}
       </motion.div>
 
       {/* Hero Image */}
