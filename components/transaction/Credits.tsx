@@ -119,10 +119,10 @@ const Credits = () => {
   const { userId } = useAuth();
   const router = useRouter();
 
-  if (!userId) {
-    router.push("/sign-in");
-    return null;
-  }
+  // if (!userId) {
+  //   router.push("/sign-in");
+  //   return null;
+  // }
 
   return (
     <div className="container  mx-auto mt-10 mb-10 z-50">
@@ -159,10 +159,10 @@ const Credits = () => {
               <button
               className="text-deep-orange bg-charcoal-black font-light py-3 px-8 rounded-md text-md transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 backdrop-filter backdrop-blur-3xl w-full"
             >
-              <a href="/generate">Get Started For Free</a>
+              <a href={userId?`/generate`:`/sign-in`}>Get Started For Free</a>
             </button>
             
-              ) : (
+              ) : userId?(
                 <SignedIn>
                   <Checkout
                     plan={plan.name}
@@ -171,7 +171,7 @@ const Credits = () => {
                     userId={userId}
                   />
                 </SignedIn>
-              )}
+              ):""}
           </div>
         ))}
       </div>
