@@ -60,7 +60,7 @@ const Hero: React.FC = () => {
         </Link>
       </SignedOut>
 
-      <Link href="https://github.com/yourusername/flashai" passHref>
+      <Link href="hhttps://github.com/heehyun1128/flashcard" passHref>
         <motion.button
           className="bg-[#24292e] text-white font-light py-3 px-8 rounded-[0.50rem] text-lg transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 backdrop-filter backdrop-blur-3xl"
           {...buttonAnimationProps}
