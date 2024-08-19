@@ -17,7 +17,7 @@ export const addToWaitlist = async (name: string, email: string) => {
 };
 
 export const getWaitlistUsers = async () => {
-  const waitlistUsers = [];
+  const waitlistUsers:any[] = [];
   const querySnapshot = await getDocs(collection(db, "waitlist"));
   querySnapshot.forEach((doc) => {
     waitlistUsers.push({ id: doc.id, ...doc.data() });

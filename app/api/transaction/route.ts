@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2022-11-15',
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+
+if (!stripeSecretKey) {
+  throw new Error("Missing Stripe Secret Key. Please check your environment variables.");
+}
+
+const stripe = new Stripe(stripeSecretKey, {
+  apiVersion: '2024-06-20',
 });
 
 const formatAmount = (amount: number) => Math.round(amount * 100);
@@ -10,7 +16,7 @@ const formatAmount = (amount: number) => Math.round(amount * 100);
 export async function POST(req:NextRequest) {
   const {plan, payAmount}=await req.json()
   try {
-    const params = {
+    const params: Stripe.Checkout.SessionCreateParams = {
       mode: 'subscription', 
       payment_method_types: ['card'],
       line_items: [{

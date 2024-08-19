@@ -48,7 +48,7 @@ const Checkout = ({
   }, [toast]);
 
   const checkout = useCallback(
-    async (event) => {
+    async (event:any) => {
       event.preventDefault(); // Prevent form submission
 
       const checkoutSession = await fetch("/api/transaction", {
@@ -85,7 +85,7 @@ const Checkout = ({
         console.error("Fetch error:", errorText);
       }
     },
-    [plan, payAmount, userId, toast]
+    [plan, payAmount, userId]
   );
 
   return (

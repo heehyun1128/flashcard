@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { addToWaitlist } from "@/utils/waitlistOperations";
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  setIsOnWaitlist: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+
+const Footer: React.FC<FooterProps> = ({ setIsOnWaitlist }) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -41,6 +46,7 @@ const Footer: React.FC = () => {
 
     try {
       const success = await addToWaitlist(name, email);
+      setIsOnWaitlist(true)
       if (success) {
         toast({
           title: "Success!",

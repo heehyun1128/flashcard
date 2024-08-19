@@ -6,7 +6,7 @@ const pricing = () => {
   return (
     <>
       <Credits />
-      <Footer />
+      {/* <Footer /> */}
     </>
 
   )
