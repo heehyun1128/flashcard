@@ -1,4 +1,8 @@
+# AI-empowered Flashcard App
 
+## Tech Stack
+
+Next.js, TypeScript, Firebase, OpenAI, Clerk, Stripe, Tailwind CSS, Framer-Motion
 ## Landing Page
 
 ![Screenshot 2024-08-18 at 10 06 22 PM](https://github.com/user-attachments/assets/daaf0bde-aaea-417d-94a0-fde43cdd0f08)
